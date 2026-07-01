@@ -21,7 +21,7 @@ def parse_conn_log(filepath):
                 continue
             try: 
                 record = {
-                    "ts" : float(fields[0]), 
+                    "ts" : float(fields[0]),  # time stamp 
                     "hash" : fields[1],
                     "src_ip": fields[2],
                     "src_port": fields[3],
