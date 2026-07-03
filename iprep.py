@@ -1,12 +1,12 @@
 import json 
 import os 
 from datetime import datetime,timedelta
-from api_keys import ABSUE_API_KEY
+from api_keys import ABUSE_API_KEY
 import time 
 import requests
 import sqlite3
 
-key = ABSUE_API_KEY
+key = ABUSE_API_KEY
 
 cache_ttl = 24 # in order to not use up all the tokens given by abuseapi - cache results 
 
