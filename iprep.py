@@ -36,7 +36,7 @@ def cache_set(ip,result):
     )
     cache.commit()
 
-def ip_check(ip): 
+def ip_check_abuseipdb(ip): 
     if not key: 
         return None
     try: 
@@ -54,3 +54,77 @@ def ip_check(ip):
     except requests.RequestException(): 
         pass
     return None
+
+def check_internetdb(ip): 
+    try: 
+        resp = requests.get(f"https://internetdb.shodan.io/{ip}",
+            timeout=5
+        )
+        if resp.status_code == 200: 
+            data = resp.json()
+            return{
+                 "open_ports": data.get("ports", []),
+                "tags":       data.get("tags", []),
+                "hostnames":  data.get("hostnames", []),
+                "vulns":      data.get("vulns", []),
+            }
+    except requests.RequestException(): 
+        pass
+    return None
+
+
+# checks agsinst a local cache + abuseipdb + internetdb from shodan
+# returns a dict of rep, confidence, action, details 
+def ip_check(ip): 
+    cached = cache_get(ip)
+    if cached: 
+        return cached
+    # skeleton for result 
+    result = {
+        "ip":ip, 
+        "rep": "unknown", 
+        "confidence":0, 
+        "action":"unknown", 
+        "details":{}
+    }
+    
+    abuse = ip_check_abuseipdb(ip)
+    if abuse: 
+        result["details"]["abuseipdb"] = abuse 
+        score = abuse["abuse_score"]
+        if score >= 80:
+            result.update({
+                "reputation": "known_bad",
+                "confidence": score,
+                "action":     "block"
+            })
+        elif score >= 40:
+            result.update({
+                "reputation": "suspicious",
+                "confidence": score,
+                "action":     "escalate"
+            })
+        elif score >= 10:
+            result.update({
+                "reputation": "suspicious",
+                "confidence": score,
+                "action":     "monitor"
+            })
+
+    internetdb = check_internetdb(ip) 
+    if internetdb:
+        result["details"]["internetdb"] = internetdb
+        # "scanner" tag from Shodan means it's been identified
+        # as a known scanning host by their honeypot network
+        if "scanner" in internetdb.get("tags", []):
+            if result["reputation"] == "unknown":
+                result.update({
+                    "reputation": "known_scanner",
+                    "confidence": 85,
+                    "action":     "ignore"
+                })
+
+    cache_set(ip, result)
+    return result
+
+

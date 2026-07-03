@@ -1,9 +1,8 @@
-import re 
 from collections import defaultdict
 from datetime import datetime
 import json
 from embed import analyze_by_port,init_embed_db
-
+from iprep import ip_check
 
 # threshold for what is counted as a scan 
 THRESHOLD = 10 
@@ -89,6 +88,11 @@ def process_log(filepath):
         print(f"  Duration: {scan['duration']}s")
         rep_port = int(scan["distinct_ports"][0])
 
+        rep = ip_check(scan["src_ip"])
+        if rep["action"] == "ignore": 
+            print(f"  Skipping: {scan['src_ip']} is {rep['reputation']}")
+            continue
+
         result = analyze_by_port(port = rep_port, scan_type=scan["scan_type"], source_ip=scan["src_ip"])
         result["dest_ip"] = scan["dest_ip"]
         result["all_ports_probed"] = scan["distinct_ports"]
@@ -151,9 +155,6 @@ def summarize(alerts):
         by_port[port]["src_ips"] = list(by_port[port]["src_ips"])
 
     return by_port
-
-
-
 
 if __name__ == "__main__":
     import sys
