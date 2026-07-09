@@ -89,7 +89,7 @@ SEVERITY: High
 - [ ] Add another layer for the LLM to take care of ~1% of the cases that will not be flagged by the 4 pillars. 
 - [ ] Live Monitoring - step away from the test conn.log and eve.json
 - [ ] requirements.txt 
-- [ ] 
+
 ## License 
 MIT :D
             
