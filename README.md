@@ -1,7 +1,6 @@
 # Sentry
-### A layered detection network reconnaissance detection agent. 
 
-Sentry is a layered detection agent, that sits on the network interface and identifies port scanning behaviour in real time. 
+### Sentry is a layered detection agent, that sits on the network interface and identifies port scanning behaviour in real time. 
 
 ``` 
 Port Scanning is a form of techinque used to probe a device or network to determine which ports are closed, open or filtered. Malicious attackers use this technique as a form of reconnaissance, checking for doors are open that they may be able to exploit. 
@@ -53,7 +52,7 @@ Structured output per detected scan: source IP, ports probed, scan type, IP repu
 
 The full stack is designed to be cost-efficient, with expensive model calls gated behind local filtering that handles the majority of decisions for free.
 
-## Output - Example: 
+## Sample Output: 
 ```
 Detected 1 scan pattern(s) (threshold: 10+ distinct ports).
 
@@ -89,7 +88,8 @@ SEVERITY: High
 ## Future Enhancements 
 - [ ] Add another layer for the LLM to take care of ~1% of the cases that will not be flagged by the 4 pillars. 
 - [ ] Live Monitoring - step away from the test conn.log and eve.json
-
+- [ ] requirements.txt 
+- [ ] 
 ## License 
 MIT :D
             
