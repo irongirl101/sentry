@@ -142,11 +142,12 @@ echo 'export ABUSEIPDB_API_KEY="your_key_here"' >> ~/.bashrc
   still requires it to read its config file.
 - The Ollama models total approximately 875 MB of disk space.
 - Tested on Ubuntu 24.04 LTS (recommended) and Ubuntu 26.04.
-  macOS is not recommended for live capture — see Architecture notes.
+  macOS is not recommended for live capture. 
 
 
 6. **Build the CVE database**
-```bash
+```
+   bash
    python3 triage.py /path/to/cvelistV5/cves --years 2024,2025,2026 \
        --save-db cve_candidates.sqlite
 ```
